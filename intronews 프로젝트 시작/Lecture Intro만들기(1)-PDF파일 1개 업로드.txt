@@ -1,0 +1,647 @@
+대분류 3: 
+Lecture Intro만들기(1) PDF파일 1개 업로드
+=============================
+=============================
+=============================
+[[Step 1]] : 전체 10개 장면 생성을 위한 설명
+
+(1) Input: 스토리가 포함된 PDF파일을 업로드합니다. 
+나는 'gemini'에게 이 스토리를 읽고 분석하게 합니다.
+
+나의 이름은 Prof. 'HS'입니다. 
+나는 한국의 40대 남성입니다.  
+나는 유명한 MBA대학원에서 '경영학' 및 '사회경제학'을 강의하고 있는 교수입니다. 
+나는 오늘 150여개의 좌석을 가진 대형 'Lecture hall'에서 강의를 하고 있습니다. 
+이 'Lecture hall'은 Tiered seating 구조이고, 양쪽 옆면에 아름다운 창을 가지고 있고 창밖으로 캠퍼스의 아름답고 녹음이 우거진 배경을 볼 수 있습니다. 
+정면에는 세련된 커다란 흰색 칠판이 있고, 칠판의 왼쪽 3m 앞에는 작지만 매우 세련된 'Digital smart lectern(=podium)'이 놓여져 있습니다. 
+
+(2) Objective:
+나는 이제 위에서 입력된 'PDF파일의 스토리'를 내가 강의하는 동영상을 만들려고 합니다.
+즉, 'Lectures of Professor HS'라는 타이틀로 위의 스토리를 강의하는 프로젝트입니다. 
+
+우선 'gemini'의 지식과 상상력을 도움받아, 시청자들을 위해서 '스토리텔링'을 할 수 있도록 전체적인 '시놉시스'를 생성하여 주세오.
+
+그 다음, 전체를 'Lectures of Professor HS Safe Opening' 장면 1개와 'Documentary Scene'의 '8개'의 장면, 'Lectures of Professor HS Safe Closing' 1개 장면으로 된 총10개의 장면으로 만드는 시나리오를 생성해 주세요. (각 장면은 10초이내의 동영상입니다)
+
+(3) Structure: 
+
+'오프닝' 장면에서는 화려하게 꾸며진 'Lecture hall'에서 Professor HS가 오늘의 스토리에 대한 개요을 설명하는 장면입니다. ('Lecture hall'의 이미지 파일 참조하라는 프롬프트를 삽입하여 주세요)
+'오프닝' 장면은 처음에는 'Lecture hall'의 흰색 칠판의 앞에 있는 'lectern' 뒤에서 강의를 시작합니다. 그리고, 오늘의 내용을 간단하게 브리핑을 합니다. 
+그리고, 마지막에는 Professor HS가 '이제 동영상을 보면서 설명을 하겠습니다'라고 말하면서, 'lectern' 위에 있는 리모콘을 누릅니다. 
+'오프닝' 장면에서 카메라의 앵글은 처음에는 Professor HS의 왼쪽에서 시작한다. 그리고, 정면으로 앵글을 이동한다. 그리고, 'Professor HS'의 정면에서 Dolly in으로 하면서, 'Professor HS'가 강의에 대한 브리핑을 하면서 시작합니다. 
+그리고 마지막에서는 흰색 칠판이 'Projector screen'으로서, 그 위에  Documentary Scene을 비쳐주는 모습으로 카메라가 천천히 옮겨갑니다. 
+
+Documentary Scene의 '8개'의 장면들은 videos within a video의 형식으로 사용되어 집니다. 
+
+'클로징' 장면에서는 다시 'Lecture hall'의 흰색 칠판의 앞에 있는 'lectern'에서 강의하는 Professor HS의 모습으로 천천히 되돌아 옵니다. 그리고, 'Professor HS'는 'Lecture hall'의 수강자들을 바라보면서, 오늘의 스토리를 정리하는 마무리 멘트를 합니다. 그리고, 최종적으로 'This is for today. Thank you!'라고 말하면서 영상은 종료된다.  
+
+위의 각 장면들 간에는 반드시 연결성과 일관성이 유지되어 있어야 하며, 각 장면별 내용과 스토리를 잘 전달해 주는 장면 묘사가 포함되어야 합니다. 
+
+(4) Featuring: (입력창) 
+
+- 예시 -
+(4-1) 스토리의 현장에서, Japanese Female Field Reporter(=현장기자)가 나와서 장면2, 장면3, 장면4, 장면5의 4개의 장면 시나리오를 만들어 주세요.
+
+(4-2) 장면6은, 카메라가가 스튜디오의 앵커로 다시 되돌아 와서, 첫번째 뉴스를 정리하는 맨트를 하고, 다시 샌프란시코의 현장기자를 호출하는 맨트로 하고, 카메라가 장면7으로 넘어가는 모습의 시나리오로 만들어 주세요.  
+
+(4-3) 또다른 스토리의 현장에서, Caucasian Female Field Reporter(=현장기자)가 나와서 장면7, 장면8, 장면9의 3개의 장면 시나리오를 만들어 주세요.
+
+>>
+
+==========================
+==========================
+==========================
+[[Step 2]] : 전체 Scene의 '10개' 장면 시나리오 만들기
+
+이전 'Step 1'에서 만들어진 시나리오들을 최대한 유지하면서, 각 장면별 시나리오로 아래와 같은 형식으로 정리하여 재작성하여 주세요. 
+
+왜냐면, 재작성된 형식의 내용을 읽고, 좀더 아이디어를 추가하거나 수정하기가 편하게 하기 위해서 입니다. 
+
+- 아래 - 
+[씬 번호]: OO
+[씬 제목]: 
+
+- Visual Storytelling Goal: (예) Show how a forgotten sports brand evolved into a globally admired fashion icon by combining historical authenticity with cinematic emotional storytelling, etc.
+- Emotional Tone: (예)Hopeful, Curious, Reflective, Triumphant, Inspirational, etc.
+- Scene Purpose: (예) Hook (or Problem or Background or Conflict or Turning Point or Solution or Conclusion, etc)
+- Scene Description: (예) 밝고 활기찬 고급 백화점 판매장 분위기속에서 쇼핑을 하고 있다. 
+- Director's Intent for this Scene(장면의 연출 의도): (예) 시청자가 '벽치기'의 의미를 직관적으로 이해하도록 스포츠와 비즈니스 장면을 대비시켜 보여준다.
+
+- 장면속 등장캐릭터: (예) [주인공], 상품을 만지고 확인하고 있음. (만약, 캐릭터가 필요없는 장면에서는 '캐릭터 없음'을 정확하게 표현해 주세요.)
+
+- 장면속 지역: (국가, 지방 등) (예) 프랑스 파리, 
+- 장면속 장소: (숲, 들판, 해변, 거리, 건물, 실내외 등등에 대해 알려 주세요) (예) '라데팡스' 거리에 있는 OO백화점 여성의류 매장내.
+- 장면속 배경: (예) 한국 명동의 고급 백화점내 2층 매장.
+ 
+- 장면속 시대: (예) 현대.
+- 장면속 연도: (예) 2026년.
+
+- 장면속 Time of Day: (예) Morning (or Afternoon or Sunset or Night, etc)
+- 장면속 Weather: (예) Sunny (or Overcast or Rainy, etc)
+- 장면속 Lighting: (예) Soft natural daylight (or Window lighting or Warm classroom lighting, etc)
+- 장면속 Color Tone: (예) Warm (or Natural or Neutral or Cool, etc)
+- Visual Focus: (예) Professor HS (or White Board or Students or Projector Screen or Smartphone Screen or X(Twitter) Post or Debate Comments, etc)
+
+- 장면속 액션 또는 활동: (예) [주인공]이 여성 브랜드 매장에서 옷을 만지고 확인하는 행동을 함. 
+- 장면속 대사: (예)[캐릭터1] 좋은 상품이 많군요, [캐릭터2] 네, 그래요!, ... (만약, 대사가 필요없는 장면에서는 '대사 없음'을 정확하게 표현해 주세요.)
+- 장면속 나래이션: (예)다양한 유통업태간의 경쟁이 한층 더 치열해 지고 있음을 알 수 있습니다. 이에 소비자들에게 잇점이 되기도 합니다. 
+
+단, 장면속에서 '대사'나 '나래이션'이 필요없다고 판단되는 경우에는 '없음'을 표시하여 주세요. 
+
+- 카메라 무브: (예)부드러운 틸트
+- 숏 변화: (예)미디엄 → 와이드
+- 분위기: (예)밝고 가벼운 
+- 효과음: (예)즐거운 쇼핑
+- BGM: (예)경쾌하지만 낮고 조용한 시네마틱
+
+- Transition to Next Scene:(예) Professor HS presses the remote → White Board becomes Projector Screen → Fade into Documentary Scene, etc
+
+- Generation Notes: (예) `캐릭터 고정`, `화면 자막 없음`, 
+...
+
+*********************************
+예를 들면, 1993년 장면에서는 "현대식 LED 조명 금지", "1990년대 일본 승용차 사용", "현대 스마트폰 등장 금지"처럼 반드시 지켜야 할 시대 요소를 짧게 명시하면, 생성 모델이 시대를 혼동하는 빈도를 더 줄일 수 있습니다
+
+ 
+==========================
+==========================
+==========================
+[[Step 3]] : 전체 10개 장면의 구성 설명
+
+이제부터 'Lectures of Professor HS'의 전체 Prompt system은 아래와 같은 순서로 작성합니다.
+
+- 아래 -  
+
+'Lectures of Professor HS' Character Prompt: (google flash)
+↓
+'Lectures of Professor HS' Documentary Scene Prompt: (스토리, Scene 02~09 공용)
+↓
+'Lectures of Professor HS' Safe Opening Prompt: (오픈닝, Scene 01 전용)
+↓
+'Lectures of Professor HS' Safe Closing Prompt: (클로징, Scene 10 전용)
+↓
+'Lectures of Professor HS' Flow Music Prompt: (음악길이: 120초)
+↓
+'Lectures of Professor HS' Transition Prompt** (컷 간 연결)
+
+---
+
+이에 따라, 첫째, 'Lectures of Professor HS' Character Prompt를 작성합니다.
+
+위에서 작성된 시나리오들을 기반으로, 이 시나리오에서 제시한 '캐릭터'들의 이미지를 생성할 수 있도록, 
+
+즉, google flash에서 생성할 수 있도록 영어로 된 '캐릭터 생성용 프롬프트'를 만들어 주세요. 
+
+[영상 스타일]: '캐릭터'들은 'Cell-shaded anime style' 스타일의 3D 애니메이션으로 만들어 주세요. 
+
+모든 캐릭터에게 어울리는 '인종', '성별', '나라와 지역', '연도와 시대'를 반드시 별도로 적어 주세요. 
+
+Seed: 671217
+
+특히, google flash의 가이드라인을 반드시 준수하여 주시고, google flash가 생성이 거부되지 않도록 안전 최적화로 조정된 프롬프트로 만들어 주세요.
+예를들면, 'Mr. OOO 교수'라는 특정 인물이 필요한 경우, 그 인물의 '나이', '성별', '인종', '직업', '분위기', '드레스 코드', '얼굴 및 외모적인 인상', '제스처' 등을 장면 상황에 잘 어울리고 캐릭터의 개성이 뚜렷하게 드러날 수 있는 '3D 애니메이션 캐릭터의 프롬프트'를 만들어 주시면 됩니다. 
+
+단, 메인 주인공인 Professor 'HS'의 이미지는 별도로 준비되어 있으므로, 생성할 필요가 없습니다.   
+
+
+==========================
+==========================
+==========================
+[[Step 4]] : Scene(02~09)의 '8개' 장면 프롬프트 생성하기
+
+이전 'Step 2'에서 만들어진 시나리오를 가지고, 
+둘째, ''Lectures of Professor HS' Documentary Scene Prompt(Scene 02~09 공용)'을 작성합니다. 
+(복붙용/ English only/ google flow에 최적화된 프롬프트)
+
+즉, Google flow를 사용하여 시네마틱한 고화질 동영상을 생성할 수 있도록, 
+각 Scene 별로 동영상을 생성하는 프롬프트를 만들어 주세요.  
+
+즉, 위에서 입력된 파일의 [뉴스] 내용을 충분히 분석하고 이해하고 난 후, 이 내용을 청중들에게 정확하게 전달할 수 있는 장면들로 연출할 수 있도록 만들어 주세요. 
+
+캐릭터가 필요한 경우, [OOO 캐릭터], [◇◇◇ 캐릭터]등등의 표현을 사용하고, 인물이 필요 없는 장면은 **'캐릭터 필요없음'**을 명확히 명시해 주세요. 
+
+그리고, 시나리오 속의 캐릭터는 위의 '캐릭터 생성 프롬프트'가지고 별도로 준비됩니다. 따라서, “이 캐릭터는 어느 씬에서 쓰세요”라고 하는 '캐릭터 매핑표'를 작성하여 주세요. 
+
+입력된 [뉴스]의 핵심 메시지와 감정적인 흐름을 충분히 분석하고 이해한 후, 이를 청중들에게 시각적 서사로 전달할 수 있는 장면들을 연출해 주세요.
+작성한 '장면별 시나리오' 들을 토대로, 각 10초이내 분량의 장면을 만들기 위한 google flow 최적화 시네마틱 프롬프트를 생성하여 주세요.
+
+'Lectures of Professor HS' Documentary의 장면별 프롬프트 작성은,  
+"
+SCENE (번호)
+↓
+Scene Title
+↓
+Scene Purpose
+↓
+Required Character
+↓
+Character Mapping
+↓
+Background Prompt (여기에는 '시대', '지역', '거리', '점포', '실내', '날씨', '조명' 등등이 포함됨)
+↓
+Google flow Prompt
+↓
+Dialogue
+↓
+Voice-over
+↓
+Sound Design
+↓
+Editing Suggestion
+↓
+Continuity Hint
+↓
+Generation Settings
+...
+"
+의 순서로 작성하여 주세요. 
+
+각 장면별로 전체적인 내용에 연결성을 유지하면서도 해당 장면 내용을 충분히 설명해주는 나래이션을 반드시 만들어서 넣어 주세요. 
+그리고, 모든 나래이션은 반드시 Voice-overs(=나래이터는 절대 나타나지 않음)로 하며, 일관성있는 목소리 톤과 감정선을 유지해 주세요. 
+
+[google flow 연출 가이드]:
+
+서사 중심의 묘사: googel flow는 자연어 이해력이 높으므로, 각 장면의 조명(Lighting), 카메라 렌즈(Lens), 질감(Texture)을 포함한 풍부한 서사적 프롬프트로 작성해 주세요.
+
+카메라 무브먼트: 컷 간 연결이 자연스럽도록 시네마틱한 카메라 무브(예: Dolly zoom, Tracking shot, Rack focus 등)를 문장 속에 녹여내 주세요.
+
+품질 중심의 긍정 묘사: Negative Prompt를 나열하기보다, '4K photorealistic', 'High-fidelity details', 'Clear facial features'와 같은 고품질 키워드를 문장에 포함해 주세요.
+
+캐릭터 일관성: 캐릭터의 얼굴과 특징을 반드시 원본 이미지와 유지하도록 'Keep the characters' appearance consistent with the attached image'라는 문구를 포함해 주세요.
+
+영상 스타일: 캐릭터는 'Cell-shaded anime style'로, 소품과 배경은 'Photorealistic 4K' 스타일로 결합하여 이질적이면서도 조화로운 하이브리드 리얼리티를 구현해 주세요.
+
+[기술 설정]:
+
+Aspect Ratio: 16:9 (1920x1080)
+
+Audio: 몰입감 있는 효과음(SFX)과 분위기에 맞는 BGM을 상세히 묘사해 주세요.
+
+Dialogue: 자막은 없애고, 대사는 반드시 영어로만 하도록 해주세요.
+
+Movement: 자연스럽고 매끄러운 움직임(Fluid motion)을 강조해 주세요.
+
+Seed: 671217
+
+Motion Strength:(최적값을 추천해 주세요)
+
+Duration:(10초이내에서 최적값을 추천해 주세요)
+
+No captions at all
+No drone aircraft in sight
+
+featuring: 
+(1) Scene 02 시작 부분에도 아래를 넣습니다.
+
+```text
+Continue naturally from the previous lecture hall presentation.
+
+The opening frame should feel as though the audience has entered the documentary shown on Professor HS's presentation screen.
+
+Maintain the same cinematic color grading, lighting mood, and visual rhythm established during the opening transition.
+
+Avoid any visual reset.
+
+The transition should appear seamless.
+
+(2) Scene 09의 마지막 부분에 아래를 넣습니다
+
+```text
+The final image gradually becomes part of the presentation displayed on the lecture hall projection board.
+
+The camera slowly pulls back from the documentary world, preparing to return naturally to Professor HS in Scene 09.
+
+Avoid hard cuts.
+
+Use a cinematic dissolve.
+
+Maintain visual continuity.
+
+----
+[출력 형식]:
+(복붙용/ English only/ google flow에 최적화된 프롬프트)
+
+==========================
+==========================
+==========================
+[[Step 5]] : Scene 01 전용 오프닝 프롬프트 생성하기
+
+이제 ''Lectures of Professor HS' Safe Opening Prompt(Scene 01 전용)'을 만들어 주세요. 
+(복붙용/ English only/ google flow에 최적화된 프롬프트)
+
+이것은 **공통 부분(Common Block)**과 **프로젝트마다 변경되는 부분(Custom Block)**으로 분리시켜서 구성해 주세요.
+
+(1) 'Lectures of Professor HS' Safe Opening Studio Prompt(Scene 01 전용)의 구조는 아래와 같습니다.
+
+- 아래 -
+(Begin with)
+
+Lecture Hall
+↓
+Professor briefing
+↓
+Presentation begins
+↓
+Projector Screen fills camera
+↓
+Scene2 starts inside the projector image
+
+```
+
+(2) COMMON BLOCK
+
+*(Reuse for Every Lecture)*
+
+```text
+Create a premium cinematic opening for a modern MBA lecture documentary program.
+
+Use the attached "Lecture Hall" image as the visual reference for the environment.
+
+Keep Professor HS's appearance fully consistent with the attached character reference image throughout the scene.
+
+The lecture hall is a spacious modern university auditorium with approximately 200 tiered seats, elegant architectural design, large floor-to-ceiling windows on both sides overlooking a lush green campus, soft natural daylight, warm wooden finishes, premium acoustic wall panels, and a large clean white projection board at the front.
+
+A sleek digital smart lectern stands slightly to the left side of the white board.
+
+Professor HS stands naturally behind the lectern, preparing to begin today's lecture.
+
+He is calm, confident, friendly, highly professional, and speaks with the presence of an experienced MBA professor.
+
+The camera begins from the professor's left side using a slow cinematic tracking shot.
+
+It gradually moves toward the front while performing a gentle dolly-in, ending in a clean medium shot.
+
+Near the end of the scene, Professor HS presses a presentation remote on the lectern.
+
+The camera slowly shifts toward the large white board, which smoothly becomes the presentation screen for today's documentary visuals.
+
+The camera continues moving forward until the projection screen completely fills the frame.
+
+Without any visible cut, the camera appears to pass through the screen itself and naturally enters the documentary world.
+
+The first frame of Scene 02 should feel like a direct continuation of this forward camera movement.
+```
+
+Professor HS is rendered in high-quality cell-shaded anime style.
+
+The lecture hall environment is rendered in photorealistic 4K with cinematic lighting, premium interior details, realistic textures, physically accurate reflections, subtle depth of field, and smooth natural camera movement.
+
+Warm educational atmosphere.
+
+Premium documentary production quality.
+...
+
+Aspect Ratio: 16:9
+
+Seed: 671217
+
+Motion Strength: 0.40
+
+Duration: 8 seconds
+
+No captions.
+
+No subtitles.
+
+No on-screen text.
+
+No logos.
+
+No watermarks.
+
+No drone aircraft in sight.
+
+```
+All transitions should be motivated by the lecture itself.
+
+Every documentary scene should feel like a visual illustration of Professor HS's explanation rather than an independent film.
+
+The audience should continuously feel that they are attending a premium MBA lecture where documentary visuals are seamlessly integrated into the teaching experience.
+
+The lecture hall serves as the narrative anchor connecting every documentary sequence.
+...
+
+The entire opening must be filmed as one continuous cinematic camera movement.
+
+Avoid any editing style that feels like multiple separate shots.
+
+The audience should experience a single uninterrupted visual journey from the lecture hall into the documentary.
+...
+
+
+(3) CUSTOM BLOCK
+
+*(Replace for Every Lecture)*
+
+```text
+Today's Story:
+Today's lecture explores {Today's Story Topic} through a clear, engaging, documentary-style storytelling approach designed for MBA and social science audiences.
+
+Presentation Screen:
+The large white projection board transforms into a clean presentation screen displaying elegant documentary-style graphics related to today's topic, including simplified maps, timeline graphics, diagrams, photographs, illustrations, and subtle motion graphics with a clean academic presentation style.
+
+Professor Dialogue:
+"Good evening, everyone.
+Welcome to Lectures of Professor HS.
+Today we will explore an interesting story that offers valuable insights into business, society, and the economy.
+Let's begin our journey together."
+
+Voice-over (Optional):
+Every remarkable story teaches us something beyond facts.
+Today's lecture invites us to understand not only what happened, but why it matters and what we can learn from it.
+```
+
+---
+
+# General Requests
+
+Use documentary-style educational visuals.
+
+Use premium university lecture atmosphere.
+
+Avoid television newsroom expressions.
+
+Avoid broadcast graphics.
+
+Avoid news ticker.
+
+Avoid lower-third captions.
+
+Avoid headline banners.
+
+Avoid "breaking news."
+
+Avoid "live broadcast."
+
+Avoid "broadcast begins."
+
+Avoid television studio language.
+
+Instead, use expressions such as:
+
+* academic documentary
+* university lecture
+* premium lecture hall
+* documentary-style presentation
+* educational storytelling
+* presentation screen
+* modern lecture environment
+* cinematic educational program
+* visual explanation
+* documentary presentation
+
+* fill the camera frame
+* entering the documentary itself
+
+The overall mood should feel like a premium university documentary lecture rather than a television news program.
+
+
+----
+==========================
+==========================
+==========================
+[[Step 6]] : Scene 10 전용 클로징 프롬프트 생성하기
+
+이제 ''Lectures of Professor HS' Safe Closing Studio Prompt(Scene 10 전용)'을 만들어 주세요. 
+(복붙용/ English only/ google flow에 최적화된 프롬프트)
+
+이것은 **공통 부분(Common Block)**과 **뉴스마다 변경되는 부분(Custom Block)**으로 분리시켜서 구성해 주세요.
+
+(1) 'Lectures of Professor HS' Safe Closing Studio Prompt(Scene 10 전용)의 구조는 아래와 같습니다.
+
+- 아래 -
+
+Scene 10(the ending of Scene 10)
+↓
+Story finishes
+↓
+Presentation screen
+↓
+Professor appears again
+↓
+Closing
+```
+
+
+(2) COMMON BLOCK
+
+*(Reuse for Every Lecture)*
+
+```text
+Create a premium cinematic closing for a modern MBA lecture documentary program.
+
+Use the attached "Lecture Hall" image as the visual reference.
+
+Keep Professor HS's appearance fully consistent with the attached character reference image.
+
+The lecture hall remains warmly illuminated with soft afternoon sunlight entering through the large campus windows.
+
+The presentation visuals gradually fade from the white projection board, returning it to a clean white teaching board.
+
+Professor HS walks calmly back toward the digital smart lectern and faces the audience naturally.
+
+He smiles gently with confidence and gratitude.
+
+The camera begins with a wide shot of the lecture hall.
+
+It slowly performs a cinematic dolly-in toward Professor HS before ending with a medium close-up.
+
+The final seconds show the professor acknowledging the audience with a small appreciative nod.
+
+Professor HS is rendered in high-quality cell-shaded anime style.
+
+The lecture hall environment is rendered in photorealistic 4K with cinematic lighting, premium interior details, realistic textures, subtle depth of field, physically accurate reflections, and smooth natural camera movement.
+
+Warm educational atmosphere.
+
+Premium documentary production quality.
+...
+
+The ending of the documentary should naturally return to the lecture hall.
+
+The final documentary image slowly dissolves back onto the large white projection board inside the lecture hall.
+
+The documentary world gradually recedes as though the camera is gently pulling back through the presentation screen.
+
+The final documentary frame becomes part of the projected image before revealing Professor HS waiting beside the lectern.
+
+As the documentary visuals gently fade away, Professor HS is already standing beside the lectern waiting to conclude the lecture.
+
+Avoid abrupt cuts.
+
+Use a seamless cinematic dissolve.
+
+The audience should feel that they have returned from the documentary journey back into the classroom.
+
+Maintain consistent lighting, color grading, and cinematic atmosphere throughout the transition.
+
+The transition should resemble the ending of a premium documentary rather than a television program.
+...
+
+Aspect Ratio: 16:9
+
+Seed: 671217
+
+Motion Strength: 0.40
+
+Duration: 8 seconds
+
+No captions.
+
+No subtitles.
+
+No on-screen text.
+
+No logos.
+
+No watermarks.
+
+No drone aircraft in sight.
+```
+
+All transitions should be motivated by the lecture itself.
+
+Every documentary scene should feel like a visual illustration of Professor HS's explanation rather than an independent film.
+
+The audience should continuously feel that they are attending a premium MBA lecture where documentary visuals are seamlessly integrated into the teaching experience.
+
+The lecture hall serves as the narrative anchor connecting every documentary sequence.
+...
+
+The closing should feel like the final movement of the same continuous cinematic journey.
+
+Avoid any abrupt editorial feeling.
+
+The audience should naturally arrive back inside the lecture hall after completing the documentary experience.
+```
+
+(3) CUSTOM BLOCK
+
+*(Replace for Every Lecture)*
+
+```text
+Today's Story:
+Today's lecture has explored {Today's Story Topic}, highlighting the key lessons, important decisions, historical context, and practical insights that remain relevant today.
+
+Presentation Screen:
+The presentation screen displays a clean summary consisting of elegant diagrams, simplified key points, timeline graphics, and symbolic documentary visuals inspired by today's lecture topic.
+
+Professor Closing Dialogue:
+"Every story leaves us with something valuable to think about.
+I hope today's lecture has provided useful insights that you can apply in your own perspective.
+This is for today.
+Thank you."
+
+Voice-over (Optional):
+Every great story ends with a lesson that continues beyond the classroom.
+The ideas discussed today remind us that thoughtful analysis helps us better understand both history and the future.
+
+Closing Camera:
+The camera slowly pulls back to reveal the elegant lecture hall, the green university campus visible through the large windows, and Professor HS standing confidently beside the lectern.
+
+Ending Transition:
+Fade smoothly to white before transitioning naturally into the end title or the next lecture.
+```
+
+---
+
+# General Requests
+
+Avoid television broadcast terminology.
+
+Avoid newsroom graphics.
+
+Avoid news closing graphics.
+
+Avoid broadcast ending.
+
+Avoid station closing.
+
+Avoid television studio language.
+
+Instead, use expressions such as:
+
+* concluding today's lecture
+* thoughtful closing message
+* educational reflection
+* documentary conclusion
+* lecture summary
+* final academic insight
+* visual presentation
+* premium university lecture
+* documentary-style ending
+
+The ending should feel warm, reflective, educational, and inspiring rather than like the conclusion of a television news broadcast.
+
+---
+
+==========================
+==========================
+==========================
+[[Step 7]] : Flow Music용 프롬프트 생성(음악길이: 120초)
+
+전체 시나리오에 정말 잘 어울리는 'Google flow music용 배경음악 프롬프트'(복붙용 / 영어 전용)을 아래와 같는 구조로 만들어 주세요.
+
+- 아래 -
+(1) Part 1(장면 01, 02): Intro & Verse
+(2) Part 2(장면 03, 04, 05): Pre-Chorus
+(3) Part 3(장면 06, 07, 08): Chorus & Bridge
+(4) Part 4(장면 09, 10): Final Chorus/Outro
+
+감정선의 흐름:  Intro & Verse -> Pre-Chorus -> Chorus & Bridge -> Final Chorus/Outro 
+전체 음악의 길이: 120초
+
+Generation Notes: 각 파트를 따로 떼기보다는 하나의 긴 서사로 연결해 주는 것으로 만들어 주세요. 즉, 곡 전체의 감정선이 자연스럽게 이어지는 하나의 프롬프트로 요청드립니다.  
+
+---
+
+
+==========================
+==========================
+==========================
+
+
+
+
+
+

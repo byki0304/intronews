@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return signedIn() && request.auth.token.role == 'admin';
+    }
+    function owns(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+    function projectOwner(projectId) {
+      return get(/databases/$(database)/documents/projects/$(projectId)).data.ownerUid;
+    }
+
+    match /allowlist/{email} {
+      allow read: if isAdmin()
+        || (signedIn()
+            && request.auth.token.email != null
+            && request.auth.token.email == email);
+      allow write: if false;
+    }
+
+    match /users/{uid} {
+      allow read: if owns(uid) || isAdmin();
+      allow write: if false;
+    }
+
+    match /assetLibrary/{assetId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.kind in ['character', 'background'];
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid;
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /projects/{projectId} {
+      allow read: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
+      allow create: if signedIn()
+        && request.resource.data.ownerUid == request.auth.uid
+        && request.resource.data.genre in ['news', 'lecture']
+        && request.resource.data.pdfMode in ['single', 'multi'];
+      allow update: if signedIn()
+        && resource.data.ownerUid == request.auth.uid
+        && request.resource.data.ownerUid == resource.data.ownerUid
+        && request.resource.data.genre == resource.data.genre;
+      allow delete: if signedIn() && resource.data.ownerUid == request.auth.uid;
+
+      match /{collection}/{docId} {
+        allow read: if isAdmin() || (signedIn() && projectOwner(projectId) == request.auth.uid);
+        allow write: if signedIn() && projectOwner(projectId) == request.auth.uid;
+      }
+    }
+  }
+}

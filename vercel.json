@@ -1,0 +1,10 @@
+{
+  "framework": null,
+  "installCommand": "npm install",
+  "buildCommand": "bash tool/vercel_build.sh",
+  "outputDirectory": "build/web",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}

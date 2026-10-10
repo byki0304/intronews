@@ -1,0 +1,18 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+    function isAdmin() {
+      return signedIn() && request.auth.token.role == 'admin';
+    }
+    match /users/{uid}/{allPaths=**} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.size < 200 * 1024 * 1024;
+      allow delete: if signedIn() && request.auth.uid == uid;
+    }
+  }
+}

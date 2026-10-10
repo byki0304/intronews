@@ -1,0 +1,35 @@
+{
+    "name": "IntroNews",
+    "short_name": "IntroNews",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0B1F3A",
+    "theme_color": "#0B1F3A",
+    "description": "News and lecture stories as 10-scene Google Flow packages.",
+    "orientation": "any",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "emulators": "firebase emulators:start --project intronews"
+  },
+  "devDependencies": {
+    "firebase-tools": "^14.22.0"
+  }
+}
