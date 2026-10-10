@@ -59,4 +59,5 @@ node_modules/
 *service-account*.json
 .tools/
 .vercel/
+.firebase/
 flutter_sdk/
