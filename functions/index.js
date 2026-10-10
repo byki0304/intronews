@@ -2,6 +2,7 @@ const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { setGlobalOptions } = require("firebase-functions/v2");
 const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
+const crypto = require("crypto");
 const { templateFor } = require("./prompts");
 const rules = require("./prompt_rules");
 
@@ -17,7 +18,9 @@ admin.initializeApp({
 
 const db = admin.firestore();
 const bucket = admin.storage().bucket();
-const ADMIN_EMAIL = "nfriend02@naver.com";
+const ADMIN_EMAILS = new Set(["nfriend02@naver.com", "byki@daum.net"]);
+const ADMIN_PHONE = "821052799244";
+const PHONE_DOMAIN = "phone.intronews.app";
 const MAX_PROPOSED = 12;
 const MAX_GENERATED = 9;
 
@@ -25,21 +28,60 @@ let allowlistReady = null;
 
 function ensureAllowlist() {
   if (!allowlistReady) {
-    allowlistReady = db
-      .collection("allowlist")
-      .doc(ADMIN_EMAIL)
-      .get()
-      .then(async (snap) => {
+    const admins = [
+      ...[...ADMIN_EMAILS].map((id) => ({ id, kind: "email" })),
+      { id: ADMIN_PHONE, kind: "phone" },
+    ];
+    allowlistReady = Promise.all(
+      admins.map(async (adminUser) => {
+        const ref = db.collection("allowlist").doc(adminUser.id);
+        const snap = await ref.get();
         if (!snap.exists) {
-          await snap.ref.set({ role: "admin", active: true });
+          await ref.set({ role: "admin", active: true, kind: adminUser.kind });
         }
-      })
-      .catch((error) => {
-        allowlistReady = null;
-        throw error;
-      });
+      }),
+    ).catch((error) => {
+      allowlistReady = null;
+      throw error;
+    });
   }
   return allowlistReady;
+}
+
+function phoneFromAuthEmail(email) {
+  const escaped = PHONE_DOMAIN.replace(/\./g, "\\.");
+  const match = String(email || "").toLowerCase().match(new RegExp(`^p(\\d+)@${escaped}$`));
+  return match ? match[1] : null;
+}
+
+function isAdminAccount(email, phone) {
+  if (email && ADMIN_EMAILS.has(String(email).toLowerCase())) return true;
+  return phone === ADMIN_PHONE;
+}
+
+function nicknameProblem(value) {
+  const name = String(value || "").trim();
+  if (!/^[\p{L}\p{N}]{1,16}$/u.test(name)) {
+    return "닉네임은 16자 이내의 문자와 숫자만 사용할 수 있습니다.";
+  }
+  return null;
+}
+
+function newAdminId() {
+  return crypto.randomBytes(18).toString("hex");
+}
+
+async function ensureAdminRecord(uid) {
+  const ref = db.collection("adminRecords").doc(uid);
+  const snap = await ref.get();
+  if (!snap.exists) {
+    await ref.set({
+      adminId: newAdminId(),
+      withdrawn: false,
+      createdAt: FieldValue.serverTimestamp(),
+      updatedAt: FieldValue.serverTimestamp(),
+    });
+  }
 }
 
 function geminiKey() {
@@ -336,29 +378,86 @@ exports.syncUser = onCall({ timeoutSeconds: 60, memory: "256MiB" }, async (reque
   await ensureAllowlist();
   const uid = request.auth.uid;
   const provider = request.auth.token?.firebase?.sign_in_provider;
+  const existing = await db.collection("users").doc(uid).get();
+  if (existing.exists && existing.data().withdrawn === true) {
+    throw new HttpsError("permission-denied", "탈퇴한 계정입니다.");
+  }
   if (provider === "anonymous") {
     await admin.auth().setCustomUserClaims(uid, { role: "member" });
     await db.collection("users").doc(uid).set(
-      { email: null, role: "member", authProvider: "anonymous" },
+      { email: null, phone: null, role: "member", authProvider: "anonymous" },
       { merge: true },
     );
-    return { role: "member", authProvider: "anonymous", email: null };
+    return { role: "member", authProvider: "anonymous", email: null, phone: null, nickname: null };
   }
-  const email = String(request.auth.token.email || "").toLowerCase();
-  if (email === ADMIN_EMAIL) {
-    await db.collection("allowlist").doc(email).set({ role: "admin", active: true }, { merge: true });
-  }
-  const allow = await db.collection("allowlist").doc(email).get();
-  if (!allow.exists || allow.data().active !== true) {
-    throw new HttpsError("permission-denied", "허용된 계정만 로그인할 수 있습니다.");
-  }
-  const role = allow.data().role === "admin" ? "admin" : "member";
+  const authEmail = String(request.auth.token.email || "").toLowerCase();
+  const phone = phoneFromAuthEmail(authEmail);
+  const email = phone ? null : authEmail || null;
+  const authProvider = provider === "google.com" ? "google" : phone ? "phone" : "password";
+  const role = isAdminAccount(email, phone) ? "admin" : "member";
   await admin.auth().setCustomUserClaims(uid, { role });
   await db.collection("users").doc(uid).set(
-    { email, role, authProvider: "password" },
+    { email, phone, role, authProvider },
     { merge: true },
   );
-  return { role, authProvider: "password", email };
+  const profile = (await db.collection("users").doc(uid).get()).data() || {};
+  return {
+    role,
+    authProvider,
+    email,
+    phone,
+    nickname: profile.nickname || null,
+  };
+});
+
+exports.saveNickname = onCall({ timeoutSeconds: 60, memory: "256MiB" }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "로그인이 필요합니다.");
+  if (request.auth.token?.firebase?.sign_in_provider === "anonymous") {
+    throw new HttpsError("failed-precondition", "비로그인 닉네임은 저장되지 않습니다.");
+  }
+  const name = String(request.data?.nickname || "").trim();
+  const problem = nicknameProblem(name);
+  if (problem) throw new HttpsError("invalid-argument", problem);
+  await db.collection("users").doc(request.auth.uid).set(
+    { nickname: name, nicknameKey: name.toLocaleLowerCase() },
+    { merge: true },
+  );
+  await ensureAdminRecord(request.auth.uid);
+  return { ok: true };
+});
+
+exports.ensurePrivateRecord = onCall({ timeoutSeconds: 60, memory: "256MiB" }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "로그인이 필요합니다.");
+  await ensureAdminRecord(request.auth.uid);
+  return { ok: true };
+});
+
+exports.deleteAccount = onCall({ timeoutSeconds: 60, memory: "256MiB" }, async (request) => {
+  if (!request.auth) throw new HttpsError("unauthenticated", "로그인이 필요합니다.");
+  const uid = request.auth.uid;
+  await db.collection("adminRecords").doc(uid).set(
+    {
+      adminId: `withdrawn_${newAdminId()}`,
+      withdrawn: true,
+      updatedAt: FieldValue.serverTimestamp(),
+    },
+    { merge: true },
+  );
+  await db.collection("users").doc(uid).set(
+    {
+      email: null,
+      phone: null,
+      nickname: null,
+      nicknameKey: null,
+      role: "withdrawn",
+      authProvider: "withdrawn",
+      withdrawn: true,
+    },
+    { merge: true },
+  );
+  await admin.auth().setCustomUserClaims(uid, { role: "withdrawn" });
+  await admin.auth().deleteUser(uid);
+  return { ok: true };
 });
 
 exports.generateOutline = onCall(async (request) => {

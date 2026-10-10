@@ -9,6 +9,7 @@ import 'ui/home_page.dart';
 import 'ui/library_page.dart';
 import 'ui/login_page.dart';
 import 'ui/logo.dart';
+import 'ui/nickname_page.dart';
 import 'ui/project_page.dart';
 
 Future<void> main() async {
@@ -66,6 +67,7 @@ class _RootPageState extends State<RootPage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
     if (!session.signedIn) return LoginPage(session: session);
+    if (!session.hasNickname) return NicknamePage(session: session);
     final narrow = MediaQuery.sizeOf(context).width < 720;
     final body = projectId != null
         ? ProjectPage(

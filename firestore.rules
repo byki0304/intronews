@@ -27,6 +27,10 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /adminRecords/{uid} {
+      allow read, write: if false;
+    }
+
     match /assetLibrary/{assetId} {
       allow read: if isAdmin() || (signedIn() && resource.data.ownerUid == request.auth.uid);
       allow create: if signedIn()
