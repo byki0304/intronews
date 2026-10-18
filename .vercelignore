@@ -1,0 +1,15 @@
+.git
+.dart_tool/
+build/
+node_modules/
+flutter_sdk/
+.firebase/
+.tools/
+functions/
+.env
+.env.*
+*.env
+**/.env
+*firebase-adminsdk*.json
+*serviceAccount*.json
+*service-account*.json
