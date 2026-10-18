@@ -190,15 +190,15 @@ Keep consistency by repeating the confirmed reference-image instructions.`;
 
 function sourceLine(genre, pdfMode) {
   if (genre === "news" && pdfMode === "single") {
-    return "News Intro만들기(1). One PDF. The broadcaster is HS of HS Broadcasting System, in a modern television studio.";
+    return "News Intro만들기(1). One source file. The broadcaster is HS of HS Broadcasting System, in a modern television studio.";
   }
   if (genre === "news") {
-    return "News Intro만들기(2). PDFs are ordered, up to 10. Read them in order. Still make exactly 10 scenes, not 10 scenes per file.";
+    return "News Intro만들기(2). Source files are ordered, up to 10. Read them in order. Still make exactly 10 scenes, not 10 scenes per file.";
   }
   if (pdfMode === "single") {
-    return "Lecture Intro만들기(1). One PDF. Professor HS teaches in the lecture hall described below.";
+    return "Lecture Intro만들기(1). One source file. Professor HS teaches in the lecture hall described below.";
   }
-  return "Lecture Intro만들기(2). PDFs are ordered lecture materials, up to 10. Read them in order. Still make exactly 10 scenes. Do not label the files as news.";
+  return "Lecture Intro만들기(2). Source files are ordered lecture materials, up to 10. Read them in order. Still make exactly 10 scenes. Do not label the files as news.";
 }
 
 function hallLine() {
@@ -232,11 +232,11 @@ ${TECHNICAL}`;
   if (kind === "outline") {
     return `${header}
 
-Read the attached PDF files and the direction note.
+Read the attached source files (PDF, Markdown, text, Word, PowerPoint, or Excel content) and the direction note.
 Write a synopsis for the audience, then exactly 10 scenes:
 Scene 01 opening, Scenes 02-09 documentary body, Scene 10 closing.
 Each scene will later become an 8-second 16:9 video. The master is about 80 seconds.
-For every scene, name the source PDF file names you actually used.
+For every scene, name the source file names you actually used.
 Opening and closing stay in the ${genre === "news" ? "HSBS studio" : "lecture hall"}.
 Body scenes carry the story. Keep continuity between neighbors.
 
@@ -258,7 +258,7 @@ Write the card text in Korean so an editor can revise it.
 If a scene needs no person, set characters to "캐릭터 없음".
 If a scene needs no spoken line, set dialogue to "대사 없음".
 If narration is unnecessary, set narration to "없음".
-Put the source PDF file names on every card.
+Put the source file names on every card.
 ${genre === "lecture" ? "Include the lecture card fields. The documentary return is Scene 10." : "News cards use the studio for 01 and 10 and the field for 02-09."}
 
 Return JSON only:

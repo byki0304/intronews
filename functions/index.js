@@ -4,6 +4,7 @@ const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
 const crypto = require("crypto");
 const { templateFor } = require("./prompts");
+const { newsFileParts } = require("./news_files");
 const rules = require("./prompt_rules");
 
 setGlobalOptions({
@@ -264,24 +265,28 @@ async function loadRoles(ref) {
 }
 
 function assertFiles(project, files) {
-  if (!files.length) throw new HttpsError("failed-precondition", "PDF가 필요합니다.");
+  if (!files.length) throw new HttpsError("failed-precondition", "뉴스파일이 필요합니다.");
   if (project.pdfMode === "single" && files.length !== 1) {
-    throw new HttpsError("failed-precondition", "PDF 1개 모드입니다.");
+    throw new HttpsError("failed-precondition", "뉴스파일 1개 모드입니다.");
   }
-  if (files.length > 10) throw new HttpsError("failed-precondition", "PDF는 최대 10개입니다.");
+  if (files.length > 10) throw new HttpsError("failed-precondition", "뉴스파일은 최대 10개입니다.");
 }
 
-async function pdfParts(files) {
+async function sourceParts(files) {
   const parts = [];
   for (const file of files) {
     const [buffer] = await bucket.file(file.storagePath).download();
-    parts.push({ text: `PDF file name: ${file.name}` });
-    parts.push({
-      inlineData: {
-        mimeType: "application/pdf",
-        data: buffer.toString("base64"),
-      },
-    });
+    let fileParts;
+    try {
+      fileParts = await newsFileParts(file.name, buffer);
+    } catch (error) {
+      console.error("news file read failed", file.name, error);
+      throw new HttpsError("failed-precondition", `파일을 읽지 못했습니다: ${file.name}`);
+    }
+    if (!fileParts.length) {
+      throw new HttpsError("failed-precondition", `파일에서 내용을 찾지 못했습니다: ${file.name}`);
+    }
+    parts.push(...fileParts);
   }
   return parts;
 }
@@ -467,7 +472,7 @@ exports.generateOutline = onCall(async (request) => {
     templateFor("outline", project.genre, project.pdfMode),
     [
       { text: `Direction note:\n${project.directionNote || ""}` },
-      ...(await pdfParts(files)),
+      ...(await sourceParts(files)),
     ],
   );
   const input = Array.isArray(parsed.scenes) ? parsed.scenes : [];

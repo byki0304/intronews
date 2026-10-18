@@ -303,8 +303,8 @@ class _ProjectPageState extends State<ProjectPage> {
         const SizedBox(height: 12),
         SegmentedButton<String>(
           segments: const [
-            ButtonSegment(value: 'single', label: Text('PDF 1개')),
-            ButtonSegment(value: 'multi', label: Text('PDF 여러 개')),
+            ButtonSegment(value: 'single', label: Text('뉴스파일 1개')),
+            ButtonSegment(value: 'multi', label: Text('뉴스파일 여러개')),
           ],
           selected: {(draft['pdfMode'] ?? 'single').toString()},
           onSelectionChanged: (value) => controller.setField('pdfMode', value.first),
@@ -346,7 +346,7 @@ class _ProjectPageState extends State<ProjectPage> {
       children: [
         Row(
           children: [
-            Text('PDF', style: Theme.of(context).textTheme.titleMedium),
+            Text('News Upload', style: Theme.of(context).textTheme.titleMedium),
             if (files.isNotEmpty) ...[
               const SizedBox(width: 12),
               TextButton(
@@ -457,7 +457,7 @@ class _ProjectPageState extends State<ProjectPage> {
         for (final id in AppConfig.sceneIds) ...[
           const SizedBox(height: 12),
           Text('장면 $id', style: Theme.of(context).textTheme.titleMedium),
-          Text('근거 PDF: ${((controller.scene(id)['sourcePdfNames'] as List?) ?? []).join(', ')}'),
+          Text('근거 파일: ${((controller.scene(id)['sourcePdfNames'] as List?) ?? []).join(', ')}'),
           TextField(
             controller: _field('o-$id-title'),
             decoration: const InputDecoration(labelText: '제목'),
@@ -505,7 +505,7 @@ class _ProjectPageState extends State<ProjectPage> {
         if (pending != null) _pending(pending),
         for (final id in AppConfig.sceneIds) ...[
           Text('장면 $id', style: Theme.of(context).textTheme.titleMedium),
-          Text('근거 PDF: ${((controller.scene(id)['sourcePdfNames'] as List?) ?? []).join(', ')}'),
+          Text('근거 파일: ${((controller.scene(id)['sourcePdfNames'] as List?) ?? []).join(', ')}'),
           TextField(
             controller: _field('c-$id-title'),
             decoration: InputDecoration(labelText: _label('title')),
@@ -768,7 +768,7 @@ class _ProjectPageState extends State<ProjectPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('장면 $id · ${_statusLabel(item)}'),
-            Text('근거 PDF: ${((item['sourcePdfNames'] as List?) ?? []).join(', ')}'),
+            Text('근거 파일: ${((item['sourcePdfNames'] as List?) ?? []).join(', ')}'),
             const SizedBox(height: 8),
             SelectableText(prompt.isEmpty ? '프롬프트가 없습니다.' : prompt),
             Wrap(
@@ -1087,7 +1087,7 @@ class _PdfDropBoxState extends State<_PdfDropBox> {
                 height: 80,
                 child: Center(
                   child: Text(
-                    '+\n(파일업로드)',
+                    '+\n(파일업로드)\nPDF · MD · TXT · DOC · DOCX · PPT · PPTX · XLS · XLSX',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 13, color: hovering ? const Color(0xFF333333) : const Color(0xFF888888)),
                   ),

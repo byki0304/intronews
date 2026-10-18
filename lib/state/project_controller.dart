@@ -446,7 +446,7 @@ class ProjectController extends ChangeNotifier {
     final multi = (draft['pdfMode'] ?? project?['pdfMode']) == 'multi';
     final picked = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: const ['pdf'],
+      allowedExtensions: newsExtensions,
       withData: true,
       allowMultiple: multi,
     );
@@ -461,16 +461,24 @@ class ProjectController extends ChangeNotifier {
   }
 
   Future<void> addPdfPayloads(List<({String name, Uint8List bytes})> incoming) async {
-    final pdfs = incoming.where((file) => file.name.toLowerCase().endsWith('.pdf') && file.bytes.isNotEmpty).toList();
-    if (pdfs.isEmpty) return;
+    final accepted = incoming
+        .where((file) => newsExtensions.contains(_ext(file.name, '')) && file.bytes.isNotEmpty)
+        .toList();
+    if (accepted.isEmpty) {
+      if (incoming.isNotEmpty) {
+        error = '지원하지 않는 파일 형식입니다. (PDF, MD, TXT, DOC, DOCX, PPT, PPTX, XLS, XLSX)';
+        notifyListeners();
+      }
+      return;
+    }
     final multi = (draft['pdfMode'] ?? project?['pdfMode']) == 'multi';
-    if (!multi && (files.length + pdfs.length) > 1) {
-      error = 'PDF 1개 모드엝서는 파일을 하나만 올릴 수 있습니다.';
+    if (!multi && (files.length + accepted.length) > 1) {
+      error = '뉴스파일 1개 모드에서는 파일을 하나만 올릴 수 있습니다.';
       notifyListeners();
       return;
     }
-    if (files.length + pdfs.length > 10) {
-      error = 'PDF는 최대 10개입니다.';
+    if (files.length + accepted.length > 10) {
+      error = '뉴스파일은 최대 10개입니다.';
       notifyListeners();
       return;
     }
@@ -478,12 +486,13 @@ class ProjectController extends ChangeNotifier {
     notifyListeners();
     try {
       var order = files.length;
-      for (final file in pdfs) {
+      for (final file in accepted) {
+        final ext = _ext(file.name, 'pdf');
         final doc = ref.collection('files').doc();
-        final path = 'users/$uid/projects/$projectId/pdf/${doc.id}.pdf';
+        final path = 'users/$uid/projects/$projectId/pdf/${doc.id}.$ext';
         await FirebaseStorage.instance.ref(path).putData(
               file.bytes,
-              SettableMetadata(contentType: 'application/pdf'),
+              SettableMetadata(contentType: _mime(ext)),
             );
         await doc.set({
           'name': file.name,
@@ -495,8 +504,8 @@ class ProjectController extends ChangeNotifier {
       await _writeStale(1);
       error = null;
     } catch (caught) {
-      error = 'PDF를 저장하지 못했습니다.';
-      debugPrint('pdf upload failed: $caught');
+      error = '뉴스파일을 저장하지 못했습니다.';
+      debugPrint('news file upload failed: $caught');
     } finally {
       busy = false;
       notifyListeners();
@@ -1096,7 +1105,8 @@ class ProjectController extends ChangeNotifier {
         if (file['id'].toString() != id) continue;
         final name = file['name']?.toString().trim() ?? '';
         if (name.isEmpty) continue;
-        names.add(name.toLowerCase().endsWith('.pdf') ? name.substring(0, name.length - 4) : name);
+        final ext = _ext(name, '');
+        names.add(newsExtensions.contains(ext) ? name.substring(0, name.length - ext.length - 1) : name);
       }
     }
     if (names.isEmpty) return null;
@@ -1157,6 +1167,8 @@ class ProjectController extends ChangeNotifier {
   }
 }
 
+const newsExtensions = ['pdf', 'md', 'txt', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+
 String _ext(String name, String fallback) {
   final parts = name.split('.');
   if (parts.length < 2) return fallback;
@@ -1172,6 +1184,22 @@ String _mime(String ext) {
   switch (ext) {
     case 'pdf':
       return 'application/pdf';
+    case 'md':
+      return 'text/markdown';
+    case 'txt':
+      return 'text/plain';
+    case 'doc':
+      return 'application/msword';
+    case 'docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case 'ppt':
+      return 'application/vnd.ms-powerpoint';
+    case 'pptx':
+      return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+    case 'xls':
+      return 'application/vnd.ms-excel';
+    case 'xlsx':
+      return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     case 'png':
       return 'image/png';
     case 'jpg':
