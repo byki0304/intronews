@@ -112,30 +112,63 @@ function parseJson(text) {
   }
 }
 
+const GEMINI_RETRY_DELAYS_MS = [3000, 8000, 15000, 30000];
+const GEMINI_TRANSIENT_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function retryAfterMs(response, fallback) {
+  const seconds = Number(response.headers.get("retry-after"));
+  if (!Number.isFinite(seconds) || seconds <= 0) return fallback;
+  return Math.min(seconds * 1000, 30000);
+}
+
 async function gemini(model, body, key) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-goog-api-key": key,
-      },
-      body: JSON.stringify(body),
-    },
-  );
-  if (!response.ok) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const payload = JSON.stringify(body);
+  for (let attempt = 0; ; attempt += 1) {
+    const delay = GEMINI_RETRY_DELAYS_MS[attempt];
+    let response;
+    try {
+      response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": key,
+        },
+        body: payload,
+      });
+    } catch (error) {
+      console.error("Gemini network error", model, attempt + 1, error?.message);
+      if (delay === undefined) {
+        throw new HttpsError("unavailable", "Gemini 서버에 연결하지 못했습니다. 잠시 후 다시 실행해 주세요.");
+      }
+      await sleep(delay);
+      continue;
+    }
+    if (response.ok) return response.json();
+
     const detail = (await response.text()).replaceAll(key, "[redacted]");
-    console.error("Gemini request failed", response.status, detail.slice(0, 400));
+    console.error("Gemini request failed", model, response.status, `attempt ${attempt + 1}`, detail.slice(0, 400));
     if (response.status === 429 && /free_tier/.test(detail) && /limit:\s*0/.test(detail)) {
       throw new HttpsError(
         "failed-precondition",
         "이 모델은 Gemini API 무료 한도가 0입니다. Google AI Studio에서 이 키의 프로젝트에 결제 계정을 연결해 주세요.",
       );
     }
-    throw new HttpsError("internal", "Gemini 호출에 실패했습니다. 다시 실행해 주세요.");
+    if (!GEMINI_TRANSIENT_STATUSES.has(response.status)) {
+      throw new HttpsError("internal", "Gemini 호출에 실패했습니다. 다시 실행해 주세요.");
+    }
+    if (delay === undefined) {
+      throw new HttpsError(
+        "unavailable",
+        "Gemini 서버 사용량이 많아 응답하지 못했습니다. 1~2분 뒤 다시 실행해 주세요.",
+      );
+    }
+    await sleep(retryAfterMs(response, delay));
   }
-  return response.json();
 }
 
 function textFrom(json) {
@@ -227,6 +260,7 @@ Cell-shaded anime character. Do not create a 16:9 frame. No text, no logo, no wa
       }
       lastError = new HttpsError("internal", "캐릭터 이미지를 만들지 못했습니다. 다시 실행해 주세요.");
     } catch (error) {
+      if (error?.code === "unavailable") throw error;
       lastError = error;
     }
   }
