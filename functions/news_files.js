@@ -1,8 +1,9 @@
-const mammoth = require("mammoth");
-const WordExtractor = require("word-extractor");
-const JSZip = require("jszip");
-const CFB = require("cfb");
-const XLSX = require("xlsx");
+// Parsers load on first use; requiring them at startup pushes deploy-time code analysis past its 10-second limit.
+const mammoth = () => require("mammoth");
+const WordExtractor = () => require("word-extractor");
+const JSZip = () => require("jszip");
+const CFB = () => require("cfb");
+const XLSX = () => require("xlsx");
 
 const MAX_CHARS = 500000;
 
@@ -36,7 +37,7 @@ function decodeXml(value) {
 }
 
 async function pptxText(buffer) {
-  const zip = await JSZip.loadAsync(buffer);
+  const zip = await JSZip().loadAsync(buffer);
   const slides = Object.keys(zip.files)
     .map((path) => ({ path, match: /^ppt\/slides\/slide(\d+)\.xml$/.exec(path) }))
     .filter((item) => item.match)
@@ -81,8 +82,8 @@ function walkPptRecords(buf, start, end, out, inSlide) {
 }
 
 function pptText(buffer) {
-  const container = CFB.read(buffer, { type: "buffer" });
-  const entry = CFB.find(container, "PowerPoint Document");
+  const container = CFB().read(buffer, { type: "buffer" });
+  const entry = CFB().find(container, "PowerPoint Document");
   if (!entry || !entry.content) return "";
   const stream = Buffer.from(entry.content);
   const out = [];
@@ -94,10 +95,10 @@ function pptText(buffer) {
 }
 
 function sheetText(buffer) {
-  const book = XLSX.read(buffer, { type: "buffer" });
+  const book = XLSX().read(buffer, { type: "buffer" });
   return book.SheetNames
     .map((name) => {
-      const csv = XLSX.utils.sheet_to_csv(book.Sheets[name], { blankrows: false });
+      const csv = XLSX().utils.sheet_to_csv(book.Sheets[name], { blankrows: false });
       return `[Sheet ${name}]\n${csv}`;
     })
     .join("\n\n");
@@ -109,9 +110,9 @@ async function extractText(ext, buffer) {
     case "md":
       return decodeText(buffer);
     case "docx":
-      return (await mammoth.extractRawText({ buffer })).value;
+      return (await mammoth().extractRawText({ buffer })).value;
     case "doc":
-      return (await new WordExtractor().extract(buffer)).getBody();
+      return (await new (WordExtractor())().extract(buffer)).getBody();
     case "pptx":
       return pptxText(buffer);
     case "ppt":
