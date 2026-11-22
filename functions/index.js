@@ -114,7 +114,7 @@ function parseJson(text) {
 
 const GEMINI_RETRY_DELAYS_MS = [2000, 5000, 12000];
 const GEMINI_TRANSIENT_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
-const DEFAULT_TEXT_FALLBACKS = ["gemini-3.6-flash", "gemini-3.5-flash-lite"];
+const DEFAULT_TEXT_FALLBACKS = ["gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-4-argon"];
 const DEFAULT_IMAGE_FALLBACKS = ["gemini-3.1-flash-image", "gemini-2.5-flash-image"];
 
 function sleep(ms) {
