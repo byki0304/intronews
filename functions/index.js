@@ -112,8 +112,10 @@ function parseJson(text) {
   }
 }
 
-const GEMINI_RETRY_DELAYS_MS = [3000, 8000, 15000, 30000];
+const GEMINI_RETRY_DELAYS_MS = [2000, 5000, 12000];
 const GEMINI_TRANSIENT_STATUSES = new Set([408, 429, 500, 502, 503, 504]);
+const DEFAULT_TEXT_FALLBACKS = ["gemini-3.6-flash", "gemini-3.5-flash-lite"];
+const DEFAULT_IMAGE_FALLBACKS = ["gemini-3.1-flash-image", "gemini-2.5-flash-image"];
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -123,6 +125,40 @@ function retryAfterMs(response, fallback) {
   const seconds = Number(response.headers.get("retry-after"));
   if (!Number.isFinite(seconds) || seconds <= 0) return fallback;
   return Math.min(seconds * 1000, 30000);
+}
+
+function modelChain(primary, fallbacks) {
+  return [...new Set([primary, ...fallbacks].map((name) => String(name || "").trim()).filter(Boolean))];
+}
+
+function envList(name, defaults) {
+  const raw = process.env[name];
+  if (raw == null || !String(raw).trim()) return defaults;
+  return String(raw)
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function textModelChain() {
+  return modelChain(process.env.GEMINI_TEXT_MODEL || "gemini-3.8-flash", envList("GEMINI_TEXT_FALLBACKS", DEFAULT_TEXT_FALLBACKS));
+}
+
+function imageModelChain() {
+  return modelChain(process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image", envList("GEMINI_IMAGE_FALLBACKS", DEFAULT_IMAGE_FALLBACKS));
+}
+
+function textBodyFor(model, system, parts) {
+  const generationConfig = { responseMimeType: "application/json" };
+  // Lite models are capacity fallbacks; skip heavy thinking so they stay available under load.
+  if (!/lite/i.test(model)) {
+    generationConfig.thinkingConfig = { thinkingLevel: "high" };
+  }
+  return {
+    systemInstruction: { parts: [{ text: system }] },
+    contents: [{ role: "user", parts }],
+    generationConfig,
+  };
 }
 
 async function gemini(model, body, key) {
@@ -190,24 +226,26 @@ function retryableTextError(error) {
 
 async function generateTextOnce(system, parts) {
   const key = geminiKey();
-  const model = process.env.GEMINI_TEXT_MODEL || "gemini-3.8-flash";
-  const json = await gemini(
-    model,
-    {
-      systemInstruction: { parts: [{ text: system }] },
-      contents: [{ role: "user", parts }],
-      generationConfig: {
-        responseMimeType: "application/json",
-        thinkingConfig: { thinkingLevel: "high" },
-      },
-    },
-    key,
-  );
-  const text = textFrom(json);
-  if (!text) {
-    throw new HttpsError("internal", "Gemini가 빈 응답을 보냈습니다. 다시 실행해 주세요.");
+  const models = textModelChain();
+  let lastError;
+  for (const model of models) {
+    try {
+      const json = await gemini(model, textBodyFor(model, system, parts), key);
+      const text = textFrom(json);
+      if (!text) {
+        throw new HttpsError("internal", "Gemini가 빈 응답을 보냈습니다. 다시 실행해 주세요.");
+      }
+      if (model !== models[0]) {
+        console.log("Gemini text fallback succeeded with", model);
+      }
+      return parseJson(text);
+    } catch (error) {
+      lastError = error;
+      if (error?.code !== "unavailable") throw error;
+      console.error("Gemini text model unavailable, trying next", model);
+    }
   }
-  return parseJson(text);
+  throw lastError;
 }
 
 async function generateText(system, parts) {
@@ -226,7 +264,7 @@ async function generateText(system, parts) {
 
 async function generateImage(prompt) {
   const key = geminiKey();
-  const model = process.env.GEMINI_IMAGE_MODEL || "gemini-3-pro-image";
+  const models = imageModelChain();
   const text = `${prompt}
 
 Vertical portrait, aspect ratio 3:4, waist-up or full body, near-solid plain background.
@@ -245,23 +283,31 @@ Cell-shaded anime character. Do not create a 16:9 frame. No text, no logo, no wa
     },
   ];
   let lastError = null;
-  for (const body of payloads) {
-    try {
-      const json = await gemini(model, body, key);
-      const parts = json?.candidates?.[0]?.content?.parts || [];
-      for (const part of parts) {
-        const inline = part.inlineData || part.inline_data;
-        if (inline?.data) {
-          return {
-            bytes: Buffer.from(inline.data, "base64"),
-            mime: inline.mimeType || inline.mime_type || "image/png",
-          };
+  for (const model of models) {
+    for (const body of payloads) {
+      try {
+        const json = await gemini(model, body, key);
+        const parts = json?.candidates?.[0]?.content?.parts || [];
+        for (const part of parts) {
+          const inline = part.inlineData || part.inline_data;
+          if (inline?.data) {
+            if (model !== models[0]) {
+              console.log("Gemini image fallback succeeded with", model);
+            }
+            return {
+              bytes: Buffer.from(inline.data, "base64"),
+              mime: inline.mimeType || inline.mime_type || "image/png",
+            };
+          }
+        }
+        lastError = new HttpsError("internal", "캐릭터 이미지를 만들지 못했습니다. 다시 실행해 주세요.");
+      } catch (error) {
+        lastError = error;
+        if (error?.code === "unavailable") {
+          console.error("Gemini image model unavailable, trying next", model);
+          break;
         }
       }
-      lastError = new HttpsError("internal", "캐릭터 이미지를 만들지 못했습니다. 다시 실행해 주세요.");
-    } catch (error) {
-      if (error?.code === "unavailable") throw error;
-      lastError = error;
     }
   }
   throw lastError;
