@@ -4,8 +4,8 @@ const admin = require("firebase-admin");
 const { FieldValue } = require("firebase-admin/firestore");
 const crypto = require("crypto");
 const { templateFor } = require("./prompts");
-const { newsFileParts } = require("./news_files");
 const rules = require("./prompt_rules");
+// news_files pulls Office parsers; load only when a source file is read.
 
 setGlobalOptions({
   region: "asia-northeast3",
@@ -353,6 +353,7 @@ function assertFiles(project, files) {
 }
 
 async function sourceParts(files) {
+  const { newsFileParts } = require("./news_files");
   const parts = [];
   for (const file of files) {
     const [buffer] = await bucket.file(file.storagePath).download();
